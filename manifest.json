@@ -1,0 +1,11 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "all-for.netlify",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "all-for.netlify",
+  "start_url": "/",
+  "theme_color": "#ffffff"
+}
