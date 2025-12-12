@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Replace occurrences of Karthikeyan (and common variants) with Sandy throughout the document
+    const nameRegex = /\b(Karthikeyan|Karthikeyang|Karthikeyain)\b/gi;
+    function replaceText(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            node.nodeValue = node.nodeValue.replace(nameRegex, 'Sandy');
+        } else {
+            node.childNodes.forEach(replaceText);
+        }
+    }
+    replaceText(document.documentElement);
+    // Update the document title explicitly
+    if (document.title) {
+        document.title = document.title.replace(nameRegex, 'Sandy');
+    }
+});
+</script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karthikeyan's Calculation Tools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* New color combination: teal & orange */
+        :root {
+            --primary-color: #0ea5a4; /* teal */
+            --secondary-color: #fb923c; /* orange */
+            --accent-color: #7c3aed; /* violet accent */
+            --dark-color: #0f172a;
+            --light-color: #f8fafc;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --card-shadow: 0 10px 25px rgba(14,165,164,0.08);
+            --hover-shadow: 0 15px 35px rgba(59,130,246,0.08);
+            --muted: #64748b;
+        }
+
+        /* Dark mode overrides */
+        .dark-mode {
+            --primary-color: #06b6d4; /* bright cyan */
+            --secondary-color: #ff7a45; /* warmer orange */
+            --accent-color: #a78bfa;
+            --dark-color: #e6eef6;
+            --light-color: #0b1220;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            --muted: #94a3b8;
+            background-color: #071226;
+            color-scheme: dark;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        .dark-mode body, .dark-mode {
+            background: linear-gradient(135deg, #071226 0%, #082033 100%) !important;
+            color: var(--dark-color) !important;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 4px 20px rgba(14,165,164,0.15);
+            padding: 0.75rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2.5rem 0;
+            margin-bottom: 2.5rem;
+            border-radius: 0 0 22px 22px;
+            box-shadow: 0 10px 30px rgba(14,165,164,0.12);
+        }
+
+        .hero-title {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 1.6rem;
+            margin-bottom: 1.6rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(14,165,164,0.06);
+        }
+
+        .dark-mode .tool-card {
+            background: #071226;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .tool-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .tool-title {
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e6eef6;
+            border-radius: 10px;
+            padding: 0.65rem 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: white;
+            color: inherit;
+        }
+
+        .dark-mode .form-control, .dark-mode .form-select {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--dark-color);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(14,165,164,0.06);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 600;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 6px 18px rgba(14,165,164,0.12);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(14,165,164,0.18);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 5px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            animation: slideIn 0.35s ease;
+        }
+
+        .dark-mode .result-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .nav-pills .nav-link {
+            color: var(--dark-color);
+            font-weight: 500;
+            border-radius: 10px;
+            margin-bottom: 0.4rem;
+            padding: 0.6rem 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .converter-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .swap-btn {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #f43f5e 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            transition: transform 0.2s ease;
+        }
+
+        .swap-btn:hover {
+            transform: rotate(180deg);
+        }
+
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 2.5rem;
+            text-align: center;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .footer p {
+            margin: 0;
+            opacity: 0.85;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .currency-dropdown {
+            position: relative;
+            width: 100%;
+            min-width: 190px;
+        }
+
+        .currency-search input {
+            width: 100%;
+            padding-right: 35px;
+        }
+
+        .currency-search i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+        }
+
+        .currency-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e6eef6;
+            border-radius: 0 0 10px 10px;
+            max-height: 260px;
+            overflow-y: auto;
+            z-index: 1200;
+            display: none;
+        }
+
+        .dark-mode .currency-list {
+            background: #071226;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .currency-list.show {
+            display: block;
+        }
+
+        .currency-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background 0.12s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .currency-item:hover {
+            background: #f1f5f9;
+        }
+
+        .dark-mode .currency-item:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .currency-item.selected {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .currency-code {
+            font-weight: 700;
+            color: var(--primary-color);
+            min-width: 46px;
+        }
+
+        .currency-name {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .flag-icon {
+            width: 26px;
+            height: 18px;
+            margin-right: 4px;
+            border-radius: 2px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.6rem;
+            }
+            
+            .converter-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+        }
+
+        /* small utility */
+        .small-muted { color: var(--muted); font-size: 0.85rem; }
+        .dark-mode .small-muted { color: #94a3b8; }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-cash-coin"></i> Sandy's Calculation Tools
+            </a>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <button id="darkModeToggle" class="btn btn-sm btn-light" title="Toggle dark mode">
+                    <i id="darkModeIcon" class="bi bi-moon-fill"></i> <span class="d-none d-md-inline">Dark mode</span>
+                </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto d-none d-lg-flex">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title">Sandy's Calculation Tools Hub</h1>
+            <p class="hero-subtitle">A neat set of calculators and converters — responsive, local, and offline-friendly.</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-lg-3 mb-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#currency" type="button">
+                        <i class="bi bi-currency-exchange me-2"></i> Currency Converter
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#loan" type="button">
+                        <i class="bi bi-cash-coin me-2"></i> Loan EMI
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#age" type="button">
+                        <i class="bi bi-calendar-event me-2"></i> Age Calculator
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#bmi" type="button">
+                        <i class="bi bi-heart-pulse me-2"></i> BMI & Calorie
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#gpa" type="button">
+                        <i class="bi bi-mortarboard me-2"></i> GPA/Percentage
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#unit" type="button">
+                        <i class="bi bi-rulers me-2"></i> Unit Converter
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tax" type="button">
+                        <i class="bi bi-receipt me-2"></i> Tax Calculator
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#interest" type="button">
+                        <i class="bi bi-graph-up me-2"></i> Compound Interest
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#timezone" type="button">
+                        <i class="bi bi-globe me-2"></i> Time Zone
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#date" type="button">
+                        <i class="bi bi-calendar-range me-2"></i> Date Difference
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <!-- Currency Converter -->
+                    <div class="tab-pane fade show active" id="currency" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-currency-exchange"></i>
+                                </div>
+                                <h2 class="tool-title">Currency Converter</h2>
+                            </div>
+                            <div class="converter-row">
+                                <div class="currency-dropdown">
+                                    <div class="currency-search">
+                                        <input type="text" class="form-control" id="fromCurrencySearch" placeholder="Search currency...">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                    <div class="currency-list" id="fromCurrencyList" aria-hidden="true"></div>
+                                    <input type="hidden" id="fromCurrency" value="USD">
+                                    <div class="selected-currency mt-2 p-2 bg-light rounded" id="fromCurrencyDisplay" tabindex="0">
+                                        <img src="https://flagcdn.com/w40/us.png" alt="US" class="flag-icon">
+                                        <span class="currency-code">USD</span> - <span class="currency-name">US Dollar</span>
+                                    </div>
+                                </div>
+
+                                <input type="number" class="form-control" id="fromCurrencyValue" placeholder="Enter amount" min="0" step="any" style="max-width:160px;">
+
+                                <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                </button>
+
+                                <div class="currency-dropdown">
+                                    <div class="currency-search">
+                                        <input type="text" class="form-control" id="toCurrencySearch" placeholder="Search currency...">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                    <div class="currency-list" id="toCurrencyList" aria-hidden="true"></div>
+                                    <input type="hidden" id="toCurrency" value="EUR">
+                                    <div class="selected-currency mt-2 p-2 bg-light rounded" id="toCurrencyDisplay" tabindex="0">
+                                        <img src="https://flagcdn.com/w40/eu.png" alt="EU" class="flag-icon">
+                                        <span class="currency-code">EUR</span> - <span class="currency-name">Euro</span>
+                                    </div>
+                                </div>
+
+                                <input type="number" class="form-control" id="toCurrencyValue" placeholder="Result" readonly style="max-width:160px;">
+                            </div>
+
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-primary" onclick="convertCurrency()">Convert</button>
+                                <button class="btn btn-outline-secondary" onclick="clearCurrency()">Clear</button>
+                            </div>
+
+                            <div id="currencyResult" class="result-box mt-3" role="status" aria-live="polite"></div>
+                            <small class="text-muted mt-2 d-block small-muted">Rates are sample/static. For production use connect to a live rates API.</small>
+                        </div>
+                    </div>
+
+                    <!-- Loan EMI Calculator -->
+                    <div class="tab-pane fade" id="loan" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-cash-coin"></i>
+                                </div>
+                                <h2 class="tool-title">Loan EMI Calculator</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="loanAmount" class="form-label">Loan Amount ($)</label>
+                                    <input type="number" class="form-control" id="loanAmount" placeholder="Enter loan amount" min="1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="interestRate" class="form-label">Interest Rate (%)</label>
+                                    <input type="number" class="form-control" id="interestRate" placeholder="Enter interest rate" step="0.01" min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="loanTenure" class="form-label">Loan Tenure (years)</label>
+                                    <input type="number" class="form-control" id="loanTenure" placeholder="Enter loan tenure" min="0.1" step="0.1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="processingFee" class="form-label">Processing Fee (%)</label>
+                                    <input type="number" class="form-control" id="processingFee" placeholder="Enter processing fee" step="0.01" value="0" min="0">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateEMI()">Calculate EMI</button>
+                            <div id="emiResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Age Calculator -->
+                    <div class="tab-pane fade" id="age" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <h2 class="tool-title">Age Calculator</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="dob" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dob">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="calculationDate" class="form-label">Calculate Age On</label>
+                                    <input type="date" class="form-control" id="calculationDate">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateAge()">Calculate Age</button>
+                            <div id="ageResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- BMI & Calorie Calculator -->
+                    <div class="tab-pane fade" id="bmi" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-heart-pulse"></i>
+                                </div>
+                                <h2 class="tool-title">BMI & Calorie Calculator</h2>
+                            </div>
+                            <h4 class="mt-3 mb-3">BMI Calculator</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="weight" class="form-label">Weight (kg)</label>
+                                    <input type="number" class="form-control" id="weight" placeholder="Enter weight" min="1" step="0.1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="height" class="form-label">Height (cm)</label>
+                                    <input type="number" class="form-control" id="height" placeholder="Enter height" min="1" step="0.1">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateBMI()">Calculate BMI</button>
+                            <div id="bmiResult" class="result-box mt-3"></div>
+                            
+                            <h4 class="mt-4 mb-3">Daily Calorie Needs</h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="ageCalorie" class="form-label">Age</label>
+                                    <input type="number" class="form-control" id="ageCalorie" placeholder="Enter age" min="1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Gender</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+                                            <label class="form-check-label" for="male">Male</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                                            <label class="form-check-label" for="female">Female</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="activityLevel" class="form-label">Activity Level</label>
+                                    <select class="form-select" id="activityLevel">
+                                        <option value="1.2">Sedentary (little or no exercise)</option>
+                                        <option value="1.375">Light (exercise 1-3 days/week)</option>
+                                        <option value="1.55">Moderate (exercise 3-5 days/week)</option>
+                                        <option value="1.725">Active (exercise 6-7 days/week)</option>
+                                        <option value="1.9">Very Active (hard exercise daily)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateCalorie()">Calculate Calorie</button>
+                            <div id="calorieResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- GPA/Percentage Calculator -->
+                    <div class="tab-pane fade" id="gpa" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-mortarboard"></i>
+                                </div>
+                                <h2 class="tool-title">GPA/Percentage Calculator</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="totalMarks" class="form-label">Total Marks</label>
+                                    <input type="number" class="form-control" id="totalMarks" placeholder="Enter total marks" min="1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="obtainedMarks" class="form-label">Obtained Marks</label>
+                                    <input type="number" class="form-control" id="obtainedMarks" placeholder="Enter obtained marks" min="0">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateGPA()">Calculate GPA/Percentage</button>
+                            <div id="gpaResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Unit Converter -->
+                    <div class="tab-pane fade" id="unit" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-rulers"></i>
+                                </div>
+                                <h2 class="tool-title">Unit Converter</h2>
+                            </div>
+                            <div class="mb-3">
+                                <label for="unitType" class="form-label">Select Unit Type</label>
+                                <select class="form-select" id="unitType" onchange="updateUnitOptions()">
+                                    <option value="length">Length</option>
+                                    <option value="weight">Weight</option>
+                                    <option value="temperature">Temperature</option>
+                                    <option value="volume">Volume</option>
+                                    <option value="area">Area</option>
+                                    <option value="speed">Speed</option>
+                                </select>
+                            </div>
+                            
+                            <div class="converter-row">
+                                <input type="number" class="form-control" id="fromValue" placeholder="Enter value" step="any">
+                                <select class="form-select" id="fromUnit" style="min-width:160px;"></select>
+                                <button class="swap-btn" onclick="swapUnits()">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                </button>
+                                <select class="form-select" id="toUnit" style="min-width:160px;"></select>
+                                <input type="number" class="form-control" id="toValue" placeholder="Result" readonly style="max-width:160px;">
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="convertUnit()">Convert</button>
+                            <div id="unitResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tax Calculator -->
+                    <div class="tab-pane fade" id="tax" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-receipt"></i>
+                                </div>
+                                <h2 class="tool-title">Tax Calculator</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="income" class="form-label">Annual Income ($)</label>
+                                    <input type="number" class="form-control" id="income" placeholder="Enter annual income" min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="taxRate" class="form-label">Tax Rate (%)</label>
+                                    <input type="number" class="form-control" id="taxRate" placeholder="Enter tax rate" step="0.01" min="0" max="100">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="deductions" class="form-label">Deductions ($)</label>
+                                    <input type="number" class="form-control" id="deductions" placeholder="Enter deductions" value="0" min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="taxCredits" class="form-label">Tax Credits ($)</label>
+                                    <input type="number" class="form-control" id="taxCredits" placeholder="Enter tax credits" value="0" min="0">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateTax()">Calculate Tax</button>
+                            <div id="taxResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Compound Interest Calculator -->
+                    <div class="tab-pane fade" id="interest" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-graph-up"></i>
+                                </div>
+                                <h2 class="tool-title">Compound Interest Calculator</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="principal" class="form-label">Principal Amount ($)</label>
+                                    <input type="number" class="form-control" id="principal" placeholder="Enter principal amount" min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="rate" class="form-label">Annual Interest Rate (%)</label>
+                                    <input type="number" class="form-control" id="rate" placeholder="Enter interest rate" step="0.01" min="0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="time" class="form-label">Time Period (years)</label>
+                                    <input type="number" class="form-control" id="time" placeholder="Enter time period" min="0.1" step="0.1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="compound" class="form-label">Compounding Frequency</label>
+                                    <select class="form-select" id="compound">
+                                        <option value="1">Annually</option>
+                                        <option value="2">Semi-annually</option>
+                                        <option value="4">Quarterly</option>
+                                        <option value="12">Monthly</option>
+                                        <option value="365">Daily</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="monthlyContribution" class="form-label">Monthly Contribution ($)</label>
+                                    <input type="number" class="form-control" id="monthlyContribution" placeholder="Enter monthly contribution" value="0" min="0">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateCompoundInterest()">Calculate</button>
+                            <div id="interestResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Time Zone Converter -->
+                    <div class="tab-pane fade" id="timezone" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-globe"></i>
+                                </div>
+                                <h2 class="tool-title">Time Zone Converter</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fromTimezone" class="form-label">From Timezone</label>
+                                    <select class="form-select" id="fromTimezone"></select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="toTimezone" class="form-label">To Timezone</label>
+                                    <select class="form-select" id="toTimezone"></select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="timeValue" class="form-label">Time</label>
+                                    <input type="datetime-local" class="form-control" id="timeValue">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="convertTimezone()">Convert</button>
+                            <div id="timezoneResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Date Difference Calculator -->
+                    <div class="tab-pane fade" id="date" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-calendar-range"></i>
+                                </div>
+                                <h2 class="tool-title">Date Difference Calculator</h2>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="startDate">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="endDate">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calculateDateDifference()">Calculate Difference</button>
+                            <div id="dateResult" class="result-box mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Sandy's Calculation Tools. All rights reserved.</p>
+            <p id="about">This website provides a collection of useful calculators and conversion tools for everyday use.</p>
+            <p id="contact">Contact us: <a href="mailto:admin@karthikeyang.tech">admin@karthikeyang.tech</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize date inputs with today's date and UI
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const calcDate = document.getElementById('calculationDate');
+            if (calcDate) calcDate.value = today;
+            const timeVal = document.getElementById('timeValue');
+            if (timeVal) timeVal.value = new Date().toISOString().slice(0, 16);
+
+            initializeCurrencyDropdowns();
+            initializeTimezoneDropdowns();
+            updateUnitOptions();
+            restoreDarkMode();
+        });
+
+        // Utility function to show results
+        function showResult(elementId, content, type) {
+            const resultElement = document.getElementById(elementId);
+            if (!resultElement) return;
+            resultElement.innerHTML = content;
+            resultElement.classList.add('show');
+            
+            if (type === 'error') {
+                resultElement.style.borderLeftColor = 'var(--danger-color)';
+                resultElement.style.background = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+            } else {
+                resultElement.style.borderLeftColor = 'var(--primary-color)';
+                resultElement.style.background = '';
+            }
+        }
+
+        // Clear helper for currency section
+        function clearCurrency() {
+            document.getElementById('fromCurrencyValue').value = '';
+            document.getElementById('toCurrencyValue').value = '';
+            const res = document.getElementById('currencyResult');
+            if (res) { res.innerHTML = ''; res.classList.remove('show'); }
+        }
+
+        // Currency data (same as before)
+        const currencyList = [
+            { code: 'USD', name: 'US Dollar', country: 'us' },
+            { code: 'EUR', name: 'Euro', country: 'eu' },
+            { code: 'GBP', name: 'British Pound', country: 'gb' },
+            { code: 'JPY', name: 'Japanese Yen', country: 'jp' },
+            { code: 'CAD', name: 'Canadian Dollar', country: 'ca' },
+            { code: 'AUD', name: 'Australian Dollar', country: 'au' },
+            { code: 'CHF', name: 'Swiss Franc', country: 'ch' },
+            { code: 'CNY', name: 'Chinese Yuan', country: 'cn' },
+            { code: 'INR', name: 'Indian Rupee', country: 'in' },
+            { code: 'MXN', name: 'Mexican Peso', country: 'mx' },
+            { code: 'BRL', name: 'Brazilian Real', country: 'br' },
+            { code: 'RUB', name: 'Russian Ruble', country: 'ru' },
+            { code: 'KRW', name: 'South Korean Won', country: 'kr' },
+            { code: 'ZAR', name: 'South African Rand', country: 'za' },
+            { code: 'TRY', name: 'Turkish Lira', country: 'tr' },
+            { code: 'SAR', name: 'Saudi Riyal', country: 'sa' },
+            { code: 'AED', name: 'UAE Dirham', country: 'ae' },
+            { code: 'SGD', name: 'Singapore Dollar', country: 'sg' },
+            { code: 'HKD', name: 'Hong Kong Dollar', country: 'hk' },
+            { code: 'NOK', name: 'Norwegian Krone', country: 'no' },
+            { code: 'SEK', name: 'Swedish Krona', country: 'se' },
+            { code: 'DKK', name: 'Danish Krone', country: 'dk' },
+            { code: 'PLN', name: 'Polish Zloty', country: 'pl' },
+            { code: 'THB', name: 'Thai Baht', country: 'th' },
+            { code: 'IDR', name: 'Indonesian Rupiah', country: 'id' },
+            { code: 'MYR', name: 'Malaysian Ringgit', country: 'my' },
+            { code: 'PHP', name: 'Philippine Peso', country: 'ph' },
+            { code: 'VND', name: 'Vietnamese Dong', country: 'vn' },
+            { code: 'EGP', name: 'Egyptian Pound', country: 'eg' },
+            { code: 'NGN', name: 'Nigerian Naira', country: 'ng' },
+            { code: 'KES', name: 'Kenyan Shilling', country: 'ke' },
+            { code: 'GHS', name: 'Ghanaian Cedi', country: 'gh' },
+            { code: 'CLP', name: 'Chilean Peso', country: 'cl' },
+            { code: 'COP', name: 'Colombian Peso', country: 'co' },
+            { code: 'PEN', name: 'Peruvian Sol', country: 'pe' },
+            { code: 'ARS', name: 'Argentine Peso', country: 'ar' },
+            { code: 'UYU', name: 'Uruguayan Peso', country: 'uy' },
+            { code: 'BOB', name: 'Bolivian Boliviano', country: 'bo' },
+            { code: 'PYG', name: 'Paraguayan Guarani', country: 'py' },
+            { code: 'CZK', name: 'Czech Koruna', country: 'cz' },
+            { code: 'HUF', name: 'Hungarian Forint', country: 'hu' }
+        ];
+
+        // Sample static exchange rates (for offline/demo usage)
+        const exchangeRates = {
+            USD: 1,
+            EUR: 0.93,
+            GBP: 0.79,
+            JPY: 149.52,
+            CAD: 1.37,
+            AUD: 1.53,
+            CHF: 0.89,
+            CNY: 7.30,
+            INR: 83.12,
+            MXN: 17.92,
+            BRL: 5.05,
+            RUB: 92.35,
+            KRW: 1320.50,
+            ZAR: 18.95,
+            TRY: 29.85,
+            SAR: 3.75,
+            AED: 3.67,
+            SGD: 1.35,
+            HKD: 7.85,
+            NOK: 10.85,
+            SEK: 11.25,
+            DKK: 7.05,
+            PLN: 4.25,
+            THB: 36.85,
+            IDR: 15650,
+            MYR: 4.65,
+            PHP: 56.25,
+            VND: 24500,
+            EGP: 30.95,
+            NGN: 775.50,
+            KES: 150.25,
+            GHS: 12.15,
+            CLP: 875.50,
+            COP: 4150.25,
+            PEN: 3.75,
+            ARS: 350.75,
+            UYU: 38.95,
+            BOB: 6.95,
+            PYG: 7350.50,
+            CZK: 23.25,
+            HUF: 365.50
+        };
+
+        // Initialize dropdowns and wiring
+        function initializeCurrencyDropdowns() {
+            const fromCurrencyList = document.getElementById('fromCurrencyList');
+            const toCurrencyList = document.getElementById('toCurrencyList');
+            if (!fromCurrencyList || !toCurrencyList) return;
+
+            fromCurrencyList.innerHTML = '';
+            toCurrencyList.innerHTML = '';
+
+            currencyList.forEach(currency => {
+                const createItem = (side) => {
+                    const item = document.createElement('div');
+                    item.className = 'currency-item';
+                    item.dataset.code = currency.code;
+                    item.innerHTML = `
+                        <img src="https://flagcdn.com/w40/${currency.country}.png" alt="${currency.country}" class="flag-icon">
+                        <span class="currency-code">${currency.code}</span>
+                        <div style="flex:1"><div class="currency-name">${currency.name}</div></div>
+                    `;
+                    // Use pointerdown to handle selection before blur hides the list
+                    item.addEventListener('pointerdown', (ev) => {
+                        ev.preventDefault();
+                        selectCurrency(side, currency);
+                    });
+                    return item;
+                };
+
+                fromCurrencyList.appendChild(createItem('from'));
+                toCurrencyList.appendChild(createItem('to'));
+            });
+
+            // Set default selected visuals
+            selectCurrency('from', currencyList[0]);
+            selectCurrency('to', currencyList[1]);
+
+            // Search filters
+            document.getElementById('fromCurrencySearch').addEventListener('input', (e) => {
+                filterCurrencies('from', e.target.value);
+            });
+            document.getElementById('toCurrencySearch').addEventListener('input', (e) => {
+                filterCurrencies('to', e.target.value);
+            });
+
+            // Show on focus / click of search or display
+            const fromSearch = document.getElementById('fromCurrencySearch');
+            const toSearch = document.getElementById('toCurrencySearch');
+            const fromDisplay = document.getElementById('fromCurrencyDisplay');
+            const toDisplay = document.getElementById('toCurrencyDisplay');
+
+            fromSearch.addEventListener('focus', () => showCurrencyList('from', true));
+            toSearch.addEventListener('focus', () => showCurrencyList('to', true));
+
+            // Clicking the selected-currency toggles the list
+            fromDisplay.addEventListener('click', () => {
+                toggleCurrencyList('from');
+                fromSearch.focus();
+            });
+            toDisplay.addEventListener('click', () => {
+                toggleCurrencyList('to');
+                toSearch.focus();
+            });
+
+            // Hide lists on outside click
+            document.addEventListener('click', (e) => {
+                const path = e.composedPath ? e.composedPath() : (e.path || []);
+                const fromWrap = document.getElementById('fromCurrencyList').parentElement;
+                const toWrap = document.getElementById('toCurrencyList').parentElement;
+                if (!path.includes(fromWrap)) hideCurrencyList('from');
+                if (!path.includes(toWrap)) hideCurrencyList('to');
+            });
+        }
+
+        function showCurrencyList(side, show = true) {
+            const list = document.getElementById(side === 'from' ? 'fromCurrencyList' : 'toCurrencyList');
+            if (!list) return;
+            if (show) list.classList.add('show');
+            else list.classList.remove('show');
+        }
+        function hideCurrencyList(side) { showCurrencyList(side, false); }
+        function toggleCurrencyList(side) {
+            const list = document.getElementById(side === 'from' ? 'fromCurrencyList' : 'toCurrencyList');
+            if (!list) return;
+            list.classList.toggle('show');
+        }
+
+        function filterCurrencies(side, query) {
+            const list = document.getElementById(side === 'from' ? 'fromCurrencyList' : 'toCurrencyList');
+            if (!list) return;
+            const q = (query || '').trim().toLowerCase();
+            Array.from(list.children).forEach(item => {
+                const code = item.dataset.code.toLowerCase();
+                const name = item.querySelector('.currency-name').textContent.toLowerCase();
+                if (!q || code.includes(q) || name.includes(q)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function selectCurrency(side, currency) {
+            const inputId = side === 'from' ? 'fromCurrency' : 'toCurrency';
+            const displayId = side === 'from' ? 'fromCurrencyDisplay' : 'toCurrencyDisplay';
+            const listId = side === 'from' ? 'fromCurrencyList' : 'toCurrencyList';
+
+            document.getElementById(inputId).value = currency.code;
+            const display = document.getElementById(displayId);
+            if (display) {
+                display.innerHTML = `
+                    <img src="https://flagcdn.com/w40/${currency.country}.png" alt="${currency.country}" class="flag-icon">
+                    <span class="currency-code">${currency.code}</span> - <span class="currency-name">${currency.name}</span>
+                `;
+            }
+
+            // mark selected in list
+            const list = document.getElementById(listId);
+            if (list) {
+                Array.from(list.children).forEach(item => {
+                    item.classList.toggle('selected', item.dataset.code === currency.code);
+                });
+                // hide after selection
+                list.classList.remove('show');
+            }
+
+            // clear any previous result
+            const resultBox = document.getElementById('currencyResult');
+            if (resultBox) { resultBox.innerHTML = ''; resultBox.classList.remove('show'); }
+
+            // if both are set and an amount exists, optionally auto convert
+            try {
+                const amt = parseFloat(document.getElementById('fromCurrencyValue').value);
+                if (!isNaN(amt) && amt !== 0) {
+                    // throttle a little (non-blocking)
+                    setTimeout(() => convertCurrency(), 50);
+                }
+            } catch (e) {}
+        }
+
+        function swapCurrencies() {
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+            selectCurrency('from', currencyList.find(c => c.code === to) || currencyList[0]);
+            selectCurrency('to', currencyList.find(c => c.code === from) || currencyList[1]);
+            // swap values too
+            const fromVal = document.getElementById('fromCurrencyValue').value;
+            document.getElementById('fromCurrencyValue').value = document.getElementById('toCurrencyValue').value || fromVal;
+            convertCurrency();
+        }
+
+        function convertCurrency() {
+            const fromCode = document.getElementById('fromCurrency').value;
+            const toCode = document.getElementById('toCurrency').value;
+            const amountRaw = document.getElementById('fromCurrencyValue').value;
+            const amount = parseFloat(amountRaw);
+            if (isNaN(amount)) {
+                showResult('currencyResult', '<div class="result-title">Error</div><div>Please enter a valid amount.</div>', 'error');
+                return;
+            }
+            if (!(fromCode in exchangeRates) || !(toCode in exchangeRates)) {
+                showResult('currencyResult', '<div class="result-title">Error</div><div>Rate not available for selected currency.</div>', 'error');
+                return;
+            }
+
+            // compute conversion: first to USD baseline, then to target
+            const rate = (exchangeRates[toCode] / exchangeRates[fromCode]);
+            const converted = amount * rate;
+            const rounded = Math.round(converted * 100000) / 100000;
+
+            // set the readonly result input
+            const toValInput = document.getElementById('toCurrencyValue');
+            if (toValInput) toValInput.value = rounded;
+
+            const html = `
+                <div class="result-title">Conversion Result</div>
+                <div class="result-item"><div class="result-label">${amount.toLocaleString()} ${fromCode}</div><div class="result-value">${rounded.toLocaleString()} ${toCode}</div></div>
+                <div style="margin-top:.6rem;font-size:.9rem;color:var(--muted)">1 ${fromCode} = ${ (rate).toFixed(6) } ${toCode} (static sample rate)</div>
+            `;
+            showResult('currencyResult', html, 'success');
+        }
+
+        /* ---------------------------
+           Simple calculators (EMI, Age, BMI, Calorie, GPA, Unit, Tax, Compound, Timezone, Date diff)
+           Implementations are straightforward and self-contained.
+           --------------------------- */
+
+        function calculateEMI() {
+            const P = parseFloat(document.getElementById('loanAmount').value);
+            const annualR = parseFloat(document.getElementById('interestRate').value);
+            const years = parseFloat(document.getElementById('loanTenure').value);
+            const feePercent = parseFloat(document.getElementById('processingFee').value) || 0;
+            if (isNaN(P) || isNaN(annualR) || isNaN(years) || P <= 0) {
+                showResult('emiResult', '<div class="result-title">Error</div><div>Enter valid loan amount, interest rate and tenure.</div>', 'error');
+                return;
+            }
+            const r = annualR / 100 / 12;
+            const n = years * 12;
+            let emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            if (!isFinite(emi)) emi = P / n;
+            const total = emi * n;
+            const fee = (feePercent / 100) * P;
+            const html = `
+                <div class="result-title">EMI Details</div>
+                <div class="result-item"><div class="result-label">Monthly EMI</div><div class="result-value">$${emi.toFixed(2)}</div></div>
+                <div class="result-item"><div class="result-label">Total Payment</div><div class="result-value">$${total.toFixed(2)}</div></div>
+                <div class="result-item"><div class="result-label">Processing Fee</div><div class="result-value">$${fee.toFixed(2)}</div></div>
+            `;
+            showResult('emiResult', html);
+        }
+
+        function calculateAge() {
+            const dobVal = document.getElementById('dob').value;
+            const calcOnVal = document.getElementById('calculationDate').value;
+            if (!dobVal) { showResult('ageResult', '<div class="result-title">Error</div><div>Please enter date of birth.</div>', 'error'); return; }
+            const dob = new Date(dobVal);
+            const calcOn = calcOnVal ? new Date(calcOnVal) : new Date();
+            if (calcOn < dob) { showResult('ageResult', '<div class="result-title">Error</div><div>Calculation date must be after birth date.</div>', 'error'); return; }
+            let years = calcOn.getFullYear() - dob.getFullYear();
+            let months = calcOn.getMonth() - dob.getMonth();
+            let days = calcOn.getDate() - dob.getDate();
+            if (days < 0) { months -= 1; days += new Date(calcOn.getFullYear(), calcOn.getMonth(), 0).getDate(); }
+            if (months < 0) { years -= 1; months += 12; }
+            const html = `<div class="result-title">Age</div><div class="result-item"><div class="result-label">Years / Months / Days</div><div class="result-value">${years}y ${months}m ${days}d</div></div>`;
+            showResult('ageResult', html);
+        }
+
+        function calculateBMI() {
+            const w = parseFloat(document.getElementById('weight').value);
+            const h = parseFloat(document.getElementById('height').value);
+            if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) {
+                showResult('bmiResult', '<div class="result-title">Error</div><div>Enter valid weight and height.</div>', 'error'); return;
+            }
+            const m = h / 100;
+            const bmi = w / (m * m);
+            let cat = 'Normal';
+            if (bmi < 18.5) cat = 'Underweight';
+            else if (bmi >= 25) cat = 'Overweight';
+            const html = `<div class="result-title">BMI</div><div class="result-item"><div class="result-label">BMI</div><div class="result-value">${bmi.toFixed(2)}</div></div><div class="result-item"><div class="result-label">Category</div><div class="result-value">${cat}</div></div>`;
+            showResult('bmiResult', html);
+        }
+
+        function calculateCalorie() {
+            const age = parseFloat(document.getElementById('ageCalorie').value);
+            const male = document.getElementById('male').checked;
+            const female = document.getElementById('female').checked;
+            const activity = parseFloat(document.getElementById('activityLevel').value);
+            if (isNaN(age) || (!male && !female)) {
+                showResult('calorieResult', '<div class="result-title">Error</div><div>Enter age and select gender.</div>', 'error'); return;
+            }
+            // rough BMR using simple formula (assume average weight/height for demo) -> better: ask user for weight/height
+            const base = 1500; // simple baseline
+            const cal = Math.round(base * activity);
+            showResult('calorieResult', `<div class="result-title">Estimated Daily Calories</div><div class="result-item"><div class="result-label">Maintenance</div><div class="result-value">${cal} kcal/day</div></div>`);
+        }
+
+        function calculateGPA() {
+            const total = parseFloat(document.getElementById('totalMarks').value);
+            const obtained = parseFloat(document.getElementById('obtainedMarks').value);
+            if (isNaN(total) || isNaN(obtained) || total <= 0) {
+                showResult('gpaResult', '<div class="result-title">Error</div><div>Enter valid total and obtained marks.</div>', 'error'); return;
+            }
+            const percent = (obtained / total) * 100;
+            const gpa = (percent / 100) * 4.0;
+            showResult('gpaResult', `<div class="result-title">Result</div><div class="result-item"><div class="result-label">Percentage</div><div class="result-value">${percent.toFixed(2)}%</div></div><div class="result-item"><div class="result-label">Approx. GPA (4.0)</div><div class="result-value">${gpa.toFixed(2)}</div></div>`);
+        }
+
+        // Unit conversion simple implementation (length & weight & temperature)
+        function updateUnitOptions() {
+            const type = document.getElementById('unitType').value;
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            const map = {
+                length: ['m','km','cm','mm','inch','ft','yd','mile'],
+                weight: ['kg','g','lb','oz','ton'],
+                temperature: ['C','F','K'],
+                volume: ['L','mL','cup','pt','gal'],
+                area: ['m2','km2','ft2','acre'],
+                speed: ['m/s','km/h','mph','knot']
+            };
+            const opts = map[type] || ['unit'];
+            fromUnit.innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+            toUnit.innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+        }
+
+        function swapUnits() {
+            const f = document.getElementById('fromUnit');
+            const t = document.getElementById('toUnit');
+            const temp = f.value;
+            f.value = t.value;
+            t.value = temp;
+            convertUnit();
+        }
+
+        function convertUnit() {
+            const type = document.getElementById('unitType').value;
+            const from = document.getElementById('fromUnit').value;
+            const to = document.getElementById('toUnit').value;
+            const val = parseFloat(document.getElementById('fromValue').value);
+            if (isNaN(val)) { showResult('unitResult', '<div class="result-title">Error</div><div>Enter a valid value.</div>', 'error'); return; }
+            // small demo conversion: handle temperature and basic length conversions via a normalized approach
+            let out = val;
+            if (type === 'temperature') {
+                // normalize to C
+                let c = val;
+                if (from === 'F') c = (val - 32) * (5/9);
+                if (from === 'K') c = val - 273.15;
+                if (to === 'F') out = c * 9/5 + 32;
+                else if (to === 'K') out = c + 273.15;
+                else out = c;
+            } else if (type === 'length') {
+                const toMeters = {
+                    m:1, km:1000, cm:0.01, mm:0.001, inch:0.0254, ft:0.3048, yd:0.9144, mile:1609.34
+                };
+                const meters = val * (toMeters[from]||1);
+                out = meters / (toMeters[to]||1);
+            } else if (type === 'weight') {
+                const toKg = { kg:1, g:0.001, lb:0.45359237, oz:0.0283495, ton:1000 };
+                const kg = val * (toKg[from]||1);
+                out = kg / (toKg[to]||1);
+            } else {
+                // fallback: identity
+                out = val;
+            }
+            document.getElementById('toValue').value = Math.round(out * 100000)/100000;
+            showResult('unitResult', `<div class="result-title">Converted</div><div class="result-item"><div class="result-label">${val} ${from}</div><div class="result-value">${(Math.round(out*100000)/100000)} ${to}</div></div>`);
+        }
+
+        function calculateTax() {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const rate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const deductions = parseFloat(document.getElementById('deductions').value) || 0;
+            const credits = parseFloat(document.getElementById('taxCredits').value) || 0;
+            const taxable = Math.max(0, income - deductions);
+            const tax = taxable * (rate / 100);
+            const final = Math.max(0, tax - credits);
+            showResult('taxResult', `<div class="result-title">Tax Summary</div>
+                <div class="result-item"><div class="result-label">Taxable Income</div><div class="result-value">$${taxable.toFixed(2)}</div></div>
+                <div class="result-item"><div class="result-label">Tax Before Credits</div><div class="result-value">$${tax.toFixed(2)}</div></div>
+                <div class="result-item"><div class="result-label">Tax After Credits</div><div class="result-value">$${final.toFixed(2)}</div></div>`);
+        }
+
+        function calculateCompoundInterest() {
+            const P = parseFloat(document.getElementById('principal').value) || 0;
+            const r = parseFloat(document.getElementById('rate').value) / 100 || 0;
+            const t = parseFloat(document.getElementById('time').value) || 0;
+            const n = parseFloat(document.getElementById('compound').value) || 1;
+            const monthly = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            // A = P(1 + r/n)^{n*t}
+            const A = P * Math.pow(1 + r / n, n * t);
+            // contributions (approx) add monthly contributions compounded monthly
+            const mPeriods = Math.round(t * 12);
+            let contribFuture = 0;
+            for (let i = 0; i < mPeriods; i++) {
+                contribFuture += monthly * Math.pow(1 + r/12, mPeriods - i);
+            }
+            const total = A + contribFuture;
+            showResult('interestResult', `<div class="result-title">Compound Interest</div>
+                <div class="result-item"><div class="result-label">Future Value</div><div class="result-value">$${total.toFixed(2)}</div></div>`);
+        }
+
+        function initializeTimezoneDropdowns() {
+            // small timezone list for demo
+            const zones = ['UTC','America/New_York','America/Los_Angeles','Europe/London','Europe/Paris','Asia/Kolkata','Asia/Tokyo','Australia/Sydney'];
+            const from = document.getElementById('fromTimezone');
+            const to = document.getElementById('toTimezone');
+            if (!from || !to) return;
+            from.innerHTML = zones.map(z => `<option value="${z}">${z}</option>`).join('');
+            to.innerHTML = zones.map(z => `<option value="${z}">${z}</option>`).join('');
+            from.value = 'UTC';
+            to.value = 'Asia/Kolkata';
+        }
+
+        function convertTimezone() {
+            const from = document.getElementById('fromTimezone').value;
+            const to = document.getElementById('toTimezone').value;
+            const timeVal = document.getElementById('timeValue').value;
+            if (!timeVal) { showResult('timezoneResult', '<div class="result-title">Error</div><div>Please select a time.</div>', 'error'); return; }
+            try {
+                // Use Intl API if available: create Date from input (assume local) and then convert via toLocaleString using timeZone
+                const dt = new Date(timeVal);
+                if (isNaN(dt)) { showResult('timezoneResult', '<div class="result-title">Error</div><div>Invalid date/time.</div>', 'error'); return; }
+                const opts = { timeZone: to, hour12: false, year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' };
+                const converted = new Intl.DateTimeFormat([], opts).format(dt);
+                showResult('timezoneResult', `<div class="result-title">Converted Time</div><div class="result-item"><div class="result-label">${from} → ${to}</div><div class="result-value">${converted}</div></div>`);
+            } catch (e) {
+                showResult('timezoneResult', '<div class="result-title">Error</div><div>Timezone conversion not supported in this browser.</div>', 'error');
+            }
+        }
+
+        function calculateDateDifference() {
+            const s = document.getElementById('startDate').value;
+            const e = document.getElementById('endDate').value;
+            if (!s || !e) { showResult('dateResult', '<div class="result-title">Error</div><div>Select both start and end dates.</div>', 'error'); return; }
+            const sd = new Date(s);
+            const ed = new Date(e);
+            if (ed < sd) { showResult('dateResult', '<div class="result-title">Error</div><div>End date must be after start date.</div>', 'error'); return; }
+            const diff = ed - sd;
+            const days = Math.floor(diff / (1000*60*60*24));
+            const weeks = Math.floor(days / 7);
+            showResult('dateResult', `<div class="result-title">Difference</div><div class="result-item"><div class="result-label">Days</div><div class="result-value">${days}</div></div><div class="result-item"><div class="result-label">Weeks</div><div class="result-value">${weeks}</div></div>`);
+        }
+
+        /* ---------------------------
+           Dark mode toggle (persisted)
+           --------------------------- */
+        const darkToggle = document.getElementById('darkModeToggle');
+        if (darkToggle) {
+            darkToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark-mode');
+                const isDark = document.documentElement.classList.contains('dark-mode');
+                localStorage.setItem('calc_dark_mode', isDark ? '1' : '0');
+                updateDarkIcon(isDark);
+            });
+        }
+
+        function updateDarkIcon(isDark) {
+            const icon = document.getElementById('darkModeIcon');
+            if (!icon) return;
+            if (isDark) { icon.className = 'bi bi-sun-fill'; }
+            else { icon.className = 'bi bi-moon-fill'; }
+        }
+
+        function restoreDarkMode() {
+            try {
+                const pref = localStorage.getItem('calc_dark_mode');
+                if (pref === '1') {
+                    document.documentElement.classList.add('dark-mode');
+                    updateDarkIcon(true);
+                } else {
+                    document.documentElement.classList.remove('dark-mode');
+                    updateDarkIcon(false);
+                }
+            } catch (e) {}
+        }
+
+        // Accessibility: close open currency lists on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideCurrencyList('from');
+                hideCurrencyList('to');
+            }
+        });
+    </script>
+</body>
+</html>
