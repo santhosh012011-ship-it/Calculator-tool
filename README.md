@@ -1,6 +1,6 @@
 # Calculator Tool — School Project
 
-Welcome! This is a small, friendly calculator built as a school project. It's written using plain HTML (with embedded CSS and JavaScript inside the HTML file), so it's easy to open and run in any web browser.
+Welcome! This is a small, friendly calculator built as a school project. It's written using plain HTML (with embedded CSS and JavaScript inside the HTML file), so it's easy to open and run in any web browser
 
 ## What this project does
 
