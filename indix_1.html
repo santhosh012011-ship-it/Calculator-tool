@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandy's Calculation Tools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand i {
+            font-size: 2rem;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .hero-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .tool-title {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 5px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .nav-pills .nav-link {
+            color: var(--dark-color);
+            font-weight: 500;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: #f1f5f9;
+        }
+
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .converter-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .swap-btn {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #f43f5e 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .swap-btn:hover {
+            transform: rotate(180deg);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .converter-row {
+                flex-direction: column;
+            }
+            
+            .swap-btn {
+                transform: rotate(90deg);
+            }
+            
+            .swap-btn:hover {
+                transform: rotate(270deg);
+            }
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #b91c1c;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+        }
+
+        /* Custom Currency Dropdown Styles */
+        .currency-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .currency-search {
+            position: relative;
+        }
+
+        .currency-search input {
+            width: 100%;
+            padding-right: 35px;
+        }
+
+        .currency-search i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .currency-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .currency-list.show {
+            display: block;
+        }
+
+        .currency-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .currency-item:hover {
+            background: #f1f5f9;
+        }
+
+        .currency-item.selected {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .currency-code {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .currency-name {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .flag-icon {
+            width: 24px;
+            height: 18px;
+            margin-right: 8px;
+            border-radius: 2px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-cash-coin"></i> Karthikeyan's Calculation Tools
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title">Karthikeyan's Calculation Tools Hub</h1>
+            <p class="hero-subtitle">Simplify your calculations with our comprehensive set of tools</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#currency" type="button">
+                        <i class="bi bi-currency-exchange me-2"></i> Currency Converter
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#loan" type="button">
+                        <i class="bi bi-cash-coin me-2"></i> Loan EMI
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#age" type="button">
+                        <i class="bi bi-calendar-event me-2"></i> Age Calculator
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#bmi" type="button">
+                        <i class="bi bi-heart-pulse me-2"></i> BMI & Calorie
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#gpa" type="button">
+                        <i class="bi bi-mortarboard me-2"></i> GPA/Percentage
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#unit" type="button">
+                        <i class="bi bi-rulers me-2"></i> Unit Converter
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tax" type="button">
+                        <i class="bi bi-receipt me-2"></i> Tax Calculator
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#interest" type="button">
+                        <i class="bi bi-graph-up me-2"></i> Compound Interest
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#timezone" type="button">
+                        <i class="bi bi-globe me-2"></i> Time Zone
+                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#date" type="button">
+                        <i class="bi bi-calendar-range me-2"></i> Date Difference
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <!-- Currency Converter -->
+                    <div class="tab-pane fade show active" id="currency" role="tabpanel">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <div class="tool-icon">
+                                    <i class="bi bi-currency-exchange"></i>
+                                </div>
+                                <h2 class="tool-title">Currency Converter</h2>
+                            </div>
+                            <div class="converter-row">
+                                <div class="currency-dropdown">
+                                    <div class="currency-search">
+                                        <input type="text" class="form-control" id="fromCurrencySearch" placeholder="Search currency...">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                    <div class="currency-list" id="fromCurrencyList"></div>
+                                    <input type="hidden" id="fromCurrency" value="USD">
+                                    <div class="selected-currency mt-2 p-2 bg-light rounded" id="fromCurrencyDisplay">
+                                        <img src="https://flagcdn.com/w40/us.png" alt="US" class="flag-icon">
+                                        <span class="currency-code">USD</span> - <span class="currency-name">US Dollar</span>
+                                    </div>
+                                </div>
+                                <input type="number" class="form-control" id="fromCurrencyValue" placeholder="Enter amount" min="0" step="any">
+                                <button class="swap-btn" onclick="swapCurrencies()">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                </button>
+                                <div class="currency-dropdown">
+                                    <div class="currency-search">
+                                        <input type="text" class="form-control" id="toCurrencySearch" placeholder="Search currency...">
+                                        <i class="bi bi-search"></i>
+                                    </div>
+                                    <div class="currency-list" id="toCurrencyList"></div>
+                                    <input type="hidden" id="toCurrency" value="EUR">
+                                    <div class="selected-currency mt-2 p-2 bg-light rounded" id="toCurrencyDisplay">
+                                        <img src="https://flagcdn.com/w40/eu.png" alt="EU" class="flag-icon">
+                                        <span class="currency-code">EUR</span> - <span class="currency-name">Euro</span>
+                                    </div>
+                                </div>
+                                <input type="number" class="form-control" id="toCurrencyValue" placeholder="Result" readonly>
+                            </div>
+                            <button class="btn btn-primary" onclick="convertCurrency()">Convert</button>
+                            <div id="currencyResult" class="result-box"></div>
+                            <small class="text-muted mt-2 d-block">Exchange ra
